@@ -1,102 +1,104 @@
 <?php
-include 'conexion.php'; // Incluye el archivo de conexión a la base de datos
+include 'conexion_P.php'; // Archivo de conexión a la base de datos
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') { //solo funciona si se llena el formulario por el método post
-
-    if (isset($_POST['crear_facultad'])) {
-        // Proceso para crear facultad
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['insertar_vendedor'])) {
+        // Insertar vendedor
+        $identificacion_vendedor = mysqli_real_escape_string($conexion, $_POST['identificacion_vendedor']);
         $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
+        $apellidos = mysqli_real_escape_string($conexion, $_POST['apellidos']);
 
-        $sql = "INSERT INTO tbl_facultad_e (id_facultad, nombre) VALUES (NULL, '$nombre')";
-
+        $sql = "INSERT INTO tbl_vendedor (identificacion_vendedor, nombre, apellidos) VALUES (NULL, '$nombre', '$apellidos')";
         if ($conexion->query($sql) === TRUE) {
-            echo "Facultad creada exitosamente";
+            echo "Vendedor añadido correctamente";
         } else {
             echo "Error: " . $sql . "<br>" . $conexion->error;
         }
-    } elseif (isset($_POST['crear_carrera'])) {
-        // Proceso para crear carrera
+    } elseif (isset($_POST['insertar_unidad_de_medida'])) {
+        // Insertar unidad de medida
         $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
-        $facultad = mysqli_real_escape_string($conexion, $_POST['id_facultad']);
-
-        $sql = "INSERT INTO tbl_carrera_e (nombre, id_facultad) VALUES ('$nombre', '$facultad')";
-
+        $sql = "INSERT INTO tbl_unidad_de_medida (id_unidad_de_medida, nombre) VALUES (NULL, '$nombre')";
         if ($conexion->query($sql) === TRUE) {
-            echo '<script>
-                swal("¡Carrera!", "Carrera insertada exitosamente", "success");
-            </script>';
+            echo '<script>swal("¡Unidad de medida!", "Agregada correctamente", "success");</script>';
         } else {
-            echo '<script>
-                swal("¡Carrera!", "Error al insertar la Carrera", "error");
-            </script>';
+            echo '<script>swal("¡Unidad de medida!", "Error al insertar la unidad de medida", "error");</script>';
         }
-    } elseif (isset($_POST['crear_estudiante'])) {
-        // Proceso para crear estudiante
-        $identificacion = mysqli_real_escape_string($conexion, $_POST['identificacion']);
-        $nombres = mysqli_real_escape_string($conexion, $_POST['nombres']);
-        $apellidos = mysqli_real_escape_string($conexion, $_POST['apellidos']);
-        $id_carrera = mysqli_real_escape_string($conexion, $_POST['id_carrera']);
-        $id_genero = mysqli_real_escape_string($conexion, $_POST['id_genero']);
-        $semestre = mysqli_real_escape_string($conexion, $_POST['semestre']);
-        $telefono_celular = mysqli_real_escape_string($conexion, $_POST['telefono_celular']);
-        $telefono_fijo = mysqli_real_escape_string($conexion, $_POST['telefono_fijo']);
-        $fecha_de_ingreso = mysqli_real_escape_string($conexion, $_POST['fecha_de_ingreso']);
-        $saldo_en_deuda = mysqli_real_escape_string($conexion, $_POST['saldo_en_deuda']);
-
-        $sql = "INSERT INTO tbl_estudiantes_e (identificacion, nombres, apellidos, id_carrera, id_genero, semestre, telefono_celular, telefono_fijo, fecha_de_ingreso, saldo_en_deuda) 
-        VALUES ('$identificacion', '$nombres', '$apellidos', '$id_carrera', '$id_genero', '$semestre', '$telefono_celular', '$telefono_fijo', '$fecha_de_ingreso', '$saldo_en_deuda')";
-
+    } elseif (isset($_POST['insertar_categoria'])) {
+        // Insertar categoría
+        $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
+        $sql = "INSERT INTO tbl_categoria (id_categoria, nombre) VALUES (NULL, '$nombre')";
         if ($conexion->query($sql) === TRUE) {
-            echo '<script>
-                swal("¡Estudiante!", "Estudiante matriculado exitosamente", "success");
-            </script>';
+            echo '<script>swal("¡Categoría!", "Agregada correctamente", "success");</script>';
         } else {
-            echo '<script>
-                swal("¡Estudiante!", "Error al matricular el estudiante", "error");
-            </script>';
+            echo '<script>swal("¡Categoría!", "Error al insertar la categoría", "error");</script>';
         }
-     }elseif (isset($_POST['eliminar_estudiante'])) { // Proceso para eliminar estudiante
-        // Obtener la identificación del estudiante a eliminar
-        $identificacion = mysqli_real_escape_string($conexion, $_POST['identificacion']);
-        
-        // Consulta SQL para eliminar estudiante por identificación
-        $sql = "DELETE FROM tbl_estudiantes_e WHERE identificacion = '$identificacion'";
-        
-        // Ejecutar la consulta
+    } elseif (isset($_POST['insertar_sub_categoria'])) {
+        // Insertar subcategoría
+        $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
+        $id_categoria = mysqli_real_escape_string($conexion, $_POST['id_categoria']);
+        $sql = "INSERT INTO tbl_sub_categoria (nombre, id_categoria) VALUES ('$nombre', '$id_categoria')";
         if ($conexion->query($sql) === TRUE) {
-            echo '<script>
-                swal("¡Estudiante Eliminado!", "El estudiante ha sido eliminado correctamente", "success");
-            </script>';
+            echo '<script>swal("¡Subcategoría!", "Subcategoría insertada exitosamente", "success");</script>';
         } else {
-            echo '<script>
-                swal("Error", "No se pudo eliminar el estudiante", "error");
-            </script>';
+            echo '<script>swal("¡Subcategoría!", "Error al insertar la subcategoría", "error");</script>';
+        }
+    } elseif (isset($_POST['insertar_producto'])) {
+        // Insertar producto
+        $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
+        $precio_costo = mysqli_real_escape_string($conexion, $_POST['precio_costo']);
+        $precio_venta = mysqli_real_escape_string($conexion, $_POST['precio_venta']);
+        $id_sub_categoria = mysqli_real_escape_string($conexion, $_POST['id_sub_categoria']);
+        $existencia = mysqli_real_escape_string($conexion, $_POST['existencia']);
+        $id_unidad_de_medida = mysqli_real_escape_string($conexion, $_POST['id_unidad_de_medida']);
+        $identificacion_vendedor = mysqli_real_escape_string($conexion, $_POST['identificacion_vendedor']);
+        $fecha_de_ultima_venta = mysqli_real_escape_string($conexion, $_POST['fecha_de_ultima_venta']);
+
+        $sql = "INSERT INTO tbl_productos (nombre, precio_costo, precio_venta, id_sub_categoria, existencia, id_unidad_de_medida, identificacion_vendedor, fecha_de_ultima_venta) 
+                VALUES ('$nombre', '$precio_costo', '$precio_venta', '$id_sub_categoria', '$existencia', '$id_unidad_de_medida', '$identificacion_vendedor', '$fecha_de_ultima_venta')";
+
+        if ($conexion->query($sql) === TRUE) {
+            echo '<script>swal("¡Producto!", "Creado exitosamente", "success");</script>';
+        } else {
+            echo '<script>swal("¡Producto!", "Error al crear producto", "error");</script>';
+        }
+    } elseif (isset($_POST['eliminar_producto'])) {
+        // Eliminar producto
+        $codigo_producto = mysqli_real_escape_string($conexion, $_POST['codigo_producto']);
+        $sql = "DELETE FROM tbl_productos WHERE codigo_producto = '$codigo_producto'";
+        if ($conexion->query($sql) === TRUE) {
+            echo '<script>swal("¡Producto Eliminado!", "El producto ha sido eliminado correctamente", "success");</script>';
+        } else {
+            echo '<script>swal("Error", "No se pudo eliminar el producto", "error");</script>';
         }
     }
-
-
 }
 
 $conexion->close();
 ?>
 
-
 <?php
-include 'conexion.php';
-$sql = "SELECT id_facultad, nombre FROM tbl_facultad_e";
-$resultado = $conexion -> query($sql);
+include 'conexion_P.php';
+$sql = "SELECT identificacion_vendedor , nombre FROM tbl_vendedor";
+$resultado_vendedor = $conexion -> query($sql);
 ?>
 
 <?php
-include 'conexion.php';
-$sql = "SELECT id_carrera, nombre FROM tbl_carrera_e";
-$resultado_estudiante = $conexion -> query($sql);
+include 'conexion_P.php';
+$sql = "SELECT id_unidad_de_medida , nombre FROM tbl_unidad_de_medida";
+$resultado_unidad = $conexion -> query($sql);
+?>
+
+
+<?php
+include 'conexion_P.php';
+$sql = "SELECT id_categoria, nombre FROM tbl_categoria";
+$resultado_categoria = $conexion -> query($sql);
 ?>
 
 <?php
-include 'conexion.php';
-$sql = "SELECT id_genero, nombre FROM tbl_genero_e";
-$resultado_genero = $conexion -> query($sql);
+include 'conexion_P.php';
+$sql = "SELECT id_sub_categoria, nombre FROM tbl_sub_categoria";
+$resultado_subcategoria = $conexion -> query($sql);
 ?>
 
 
@@ -121,116 +123,141 @@ $resultado_genero = $conexion -> query($sql);
             font-size: 20px;
             margin-bottom: 10px;
         }
-        .estudiantes {
+        .productos {
             margin-bottom: 30px;
         }
     </style>
 </head>
 <body>
 
-<div class="container estudiantes"> <!--CREAR EL CLASS CON DOS NOMBRES PARA QUE EN EL SEGUNDO ESTÉ LA SEPARACIÓN DE LOS FORMULARIOS-->
-    <p class="titulo">Crear Facultad</p>
+<!-- Formulario para insertar vendedor -->
+<div class="container productos">
+    <p class="titulo">Insertar vendedor:</p>
     <form action="" method="post">
-        <label for="nombre">Nombre de la Facultad:</label><br>
+        <label for="identificacion_vendedor">Identificación vendedor:</label><br>
+        <input type="number" id="identificacion_vendedor" name="identificacion_vendedor" required><br><br>
+        <label for="nombre">Nombre del vendedor:</label><br>
         <input type="text" id="nombre" name="nombre" required><br><br>
-        <input type="submit" name="crear_facultad" value="Crear Facultad">
-    </form>
-</div>
-
-<div class="container estudiantes">
-    <p class="titulo">Crear Carrera</p>
-    <form action="" method="post">
-        <label for="nombre_carrera">Nombre de la Carrera:</label><br>
-        <input type="text" id="nombre_carrera" name="nombre" required><br><br>
-
-        <label for="id_facultad">Facultad:</label><br>
-        <select name="id_facultad" required>
-      <option value ="">Seleccione una facultad</option>
-      <?php //ABRIR PHP PARA PODER HACER EL CICLO
-        
-       if ($resultado -> num_rows > 0) { //num rows es la encargada de mostrar las filas de una tabla
-        while ($fila = $resultado -> fetch_assoc()) {
-            echo  '<option value="'.$fila['id_facultad'].'">'.$fila['nombre'].'</option>';
-        }
-       }else {
-        echo '<option value = ""> No hay facultades</option>';
-       }
-      ?>
-        </select><br><br>
-
-        <input type="submit" name="crear_carrera" value="Crear Carrera">
-    </form>
-</div>
-
-<div class="container estudiantes">
-    <p class="titulo">Crear Estudiante</p>
-    <form action="" method="post">
-        <label for="identificacion">Identificación:</label><br>
-        <input type="number" id="identificacion" name="identificacion" required><br><br>
-        <label for="nombres">Nombres:</label><br>
-        <input type="text" id="nombres" name="nombres" required><br><br>
-        <label for="apellidos">Apellidos:</label><br>
+        <label for="apellidos">Apellido del vendedor:</label><br>
         <input type="text" id="apellidos" name="apellidos" required><br><br>
-
-        
-        <label for="id_carrera">Carrera:</label><br>
-        <select name="id_carrera" required>
-      <option value ="">Seleccione la carrera:</option>
-      <?php //ABRIR PHP PARA PODER HACER EL CICLO
-        
-       if ($resultado_estudiante -> num_rows > 0) { //num rows es la encargada de mostrar las filas de una tabla
-        while ($fila = $resultado_estudiante -> fetch_assoc()) {
-            echo  '<option value="'.$fila['id_carrera'].'">'.$fila['nombre'].'</option>';
-        }
-       }else {
-        echo '<option value =""> No hay carreras</option>';
-       }
-      ?>
-        </select><br><br>
-
-
-        <label for="id_genero">Género:</label><br>
-        <select name="id_genero" required>
-      <option value ="">Seleccione su género:</option>
-      <?php //ABRIR PHP PARA PODER HACER EL CICLO
-        
-       if ($resultado_genero -> num_rows > 0) { //num rows es la encargada de mostrar las filas de una tabla
-        while ($fila = $resultado_genero -> fetch_assoc()) {
-            echo  '<option value="'.$fila['id_genero'].'">'.$fila['nombre'].'</option>';
-        }
-       }else {
-        echo '<option value =""> No hay géneros</option>';
-       }
-      ?>
-        </select><br><br>
-
-        <label for="semestre">Semestre:</label><br>
-        <input type="text" id="semestre" name="semestre" required><br><br>
-        <label for="telefono_celular">Teléfono Celular:</label><br>
-        <input type="tel" id="telefono_celular" name="telefono_celular" required><br><br>
-        <label for="telefono_fijo">Teléfono Fijo:</label><br>
-        <input type="tel" id="telefono_fijo" name="telefono_fijo" required><br><br>
-        <label for="fecha_de_ingreso">Fecha de Ingreso:</label><br>
-        <input type="date" id="fecha_de_ingreso" name="fecha_de_ingreso" required><br><br>
-        <label for="saldo_en_deuda">Saldo en Deuda:</label><br>
-        
-        <input type="number" id="saldo_en_deuda" name="saldo_en_deuda" required><br><br>
-        <input type="submit" name="crear_estudiante" value="Matricular Estudiante">
+        <input type="submit" name="insertar_vendedor" value="Insertar vendedor">
     </form>
 </div>
 
-
-
-<div class="container estudiantes">
-    <p class="titulo">Eliminar Estudiante</p>
+<!-- Formulario para insertar unidad de medida -->
+<div class="container productos">
+    <p class="titulo">Insertar unidad de medida</p>
     <form action="" method="post">
-        <label for="identificacion">Identificación:</label><br>
-        <input type="number" id="identificacion" name="identificacion" required><br><br>
-        <!-- Cambiar el valor del botón de envío para eliminar estudiante -->
-        <input type="submit" name="eliminar_estudiante" value="Eliminar estudiante">
+        <label for="nombre">Unidad de medida:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        <input type="submit" name="insertar_unidad_de_medida" value="Crear unidad de medida">
     </form>
 </div>
 
+<!-- Formulario para insertar categoría -->
+<div class="container productos">
+    <p class="titulo">Insertar categoría:</p>
+    <form action="" method="post">
+        <label for="nombre">Categoría:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        <input type="submit" name="insertar_categoria" value="Crear categoría">
+    </form>
+</div>
+
+<!-- Formulario para insertar subcategoría -->
+<div class="container productos">
+    <p class="titulo">Insertar subcategoría:</p>
+    <form action="" method="post">
+        <label for="nombre">Subcategoría:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        <label for="id_categoria">Categoría:</label><br>
+        <select name="id_categoria" required>
+            <option value="">Seleccione una categoría:</option>
+            <?php
+            // Lista de categorías
+            if ($resultado_categoria->num_rows > 0) {
+                while ($fila = $resultado_categoria->fetch_assoc()) {
+                    echo '<option value="'.$fila['id_categoria'].'">'.$fila['nombre'].'</option>';
+                }
+            } else {
+                echo '<option value="">No hay categorías</option>';
+            }
+            ?>
+        </select><br><br>
+        <input type="submit" name="insertar_sub_categoria" value="Crear subcategoría">
+    </form>
+</div>
+
+<!-- Formulario para insertar producto -->
+<div class="container productos">
+    <p class="titulo">Insertar producto</p>
+    <form action="" method="post">
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        <label for="precio_costo">Precio costo:</label><br>
+        <input type="text" id="precio_costo" name="precio_costo" required><br><br>
+       
+        <label for="precio_venta">Precio venta:</label><br>
+        <input type="text" id="precio_venta" name="precio_venta" required><br><br>
+        <label for="id_sub_categoria">Subcategoría:</label><br>
+        <select name="id_sub_categoria" required>
+            <option value="">Seleccione una subcategoría:</option>
+            <?php
+            // Lista de subcategorías
+            if ($resultado_subcategoria->num_rows > 0) {
+                while ($fila = $resultado_subcategoria->fetch_assoc()) {
+                    echo '<option value="'.$fila['id_sub_categoria'].'">'.$fila['nombre'].'</option>';
+                }
+            } else {
+                echo '<option value="">No hay subcategorías</option>';
+            }
+            ?>
+        </select><br><br>
+        <label for="existencia">Existencia:</label><br>
+        <input type="number" id="existencia" name="existencia" required><br><br>
+        <label for="id_unidad_de_medida">Unidad de medida:</label><br>
+        <select name="id_unidad_de_medida" required>
+            <option value="">Seleccione una unidad de medida:</option>
+            <?php
+            // Lista de unidades de medida
+            if ($resultado_unidad->num_rows > 0) {
+                while ($fila = $resultado_unidad->fetch_assoc()) {
+                    echo '<option value="'.$fila['id_unidad_de_medida'].'">'.$fila['nombre'].'</option>';
+                }
+            } else {
+                echo '<option value="">No hay unidades de medida</option>';
+            }
+            ?>
+        </select><br><br>
+        <label for="identificacion_vendedor">Vendedor:</label><br>
+        <select name="identificacion_vendedor" required>
+            <option value="">Seleccione un vendedor:</option>
+            <?php
+            // Lista de vendedores
+            if ($resultado_vendedor->num_rows > 0) {
+                while ($fila = $resultado_vendedor->fetch_assoc()) {
+                    echo '<option value="'.$fila['identificacion_vendedor'].'">'.$fila['nombre'].' '.$fila['apellidos'].'</option>';
+                }
+            } else {
+                echo '<option value="">No hay vendedores</option>';
+            }
+            ?>
+        </select><br><br>
+        <label for="fecha_de_ultima_venta">Fecha de última venta:</label><br>
+        <input type="date" id="fecha_de_ultima_venta" name="fecha_de_ultima_venta"><br><br>
+        <input type="submit" name="insertar_producto" value="Crear producto">
+    </form>
+</div>
+
+<!-- Formulario para eliminar producto -->
+<div class="container productos">
+    <p class="titulo">Eliminar producto:</p>
+    <form action="" method="post">
+        <label for="codigo_producto">Código del producto:</label><br>
+        <input type="number" id="codigo_producto" name="codigo_producto" required><br><br>
+        <input type="submit" name="eliminar_producto" value="Eliminar producto">
+    </form>
+</div>
 
 <!-- SweetAlert2 JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
