@@ -1,13 +1,15 @@
 <?php
-include 'conexion.php';
+include 'conexion_P.php';
 
 // Consulta SQL usando alias para evitar conflicto entre columnas con el mismo nombre
-$sql = "SELECT tbl_estudiantes_e.identificacion, tbl_estudiantes_e.nombres, tbl_estudiantes_e.apellidos, 
-               tbl_carrera_e.nombre AS carrera_nombre, tbl_genero_e.nombre AS genero_nombre, 
-               tbl_estudiantes_e.semestre, tbl_estudiantes_e.fecha_de_ingreso
-        FROM tbl_estudiantes_e
-        JOIN tbl_carrera_e ON tbl_estudiantes_e.id_carrera = tbl_carrera_e.id_carrera
-        JOIN tbl_genero_e ON tbl_estudiantes_e.id_genero = tbl_genero_e.id_genero";
+$sql = "SELECT tbl_productos.codigo_producto, tbl_productos.nombre, tbl_productos.precio_costo, tbl_productos.precio_venta, 
+               tbl_sub_categoria.nombre AS subcategoria_nombre, tbl_productos.existencia, 
+               tbl_unidad_de_medida.nombre AS unidad_nombre, 
+               tbl_vendedor.nombre AS vendedor_nombre, tbl_productos.fecha_de_ultima_venta
+        FROM tbl_productos
+        JOIN tbl_sub_categoria ON tbl_productos.id_sub_categoria = tbl_sub_categoria.id_sub_categoria
+        JOIN tbl_unidad_de_medida ON tbl_productos.id_unidad_de_medida = tbl_unidad_de_medida.id_unidad_de_medida
+        JOIN tbl_vendedor ON tbl_productos.identificacion_vendedor = tbl_vendedor.identificacion_vendedor";
 
 $resultado = $conexion->query($sql);
 ?>
@@ -17,8 +19,7 @@ $resultado = $conexion->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Estudiantes</title>
-    <link rel="stylesheet" type="text/css" href="estilos.css"> 
+    <title>Lista de Productos</title> <!-- Cambiado a "Lista de Productos" -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,37 +67,41 @@ $resultado = $conexion->query($sql);
 </head>
 <body>
 
-<h1>Lista de Estudiantes</h1>
+<h1>Lista de Productos</h1> <!-- Cambiado a "Lista de Productos" -->
 
 <?php
 if ($resultado->num_rows > 0) {
     echo "<table>
             <tr>
-                <th>ID</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Carrera</th>
-                <th>Género</th>
-                <th>Semestre</th>
-                <th>Fecha de Ingreso</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Precio costo</th>
+                <th>Precio venta</th>
+                <th>Subcategoría</th>
+                <th>Existencia</th>
+                <th>Unidad de medida</th>
+                <th>Vendedor</th>
+                <th>Fecha de última venta</th>
             </tr>";
     
     // Recorrer el resultado y mostrar cada fila
     while ($row = $resultado->fetch_assoc()) {
         echo "<tr>
-                <td>" . $row["identificacion"] . "</td>
-                <td>" . $row["nombres"] . "</td>
-                <td>" . $row["apellidos"] . "</td>
-                <td>" . $row["carrera_nombre"] . "</td>
-                <td>" . $row["genero_nombre"] . "</td>
-                <td>" . $row["semestre"] . "</td>
-                <td>" . $row["fecha_de_ingreso"] . "</td>
+                <td>" . $row["codigo_producto"] . "</td>
+                <td>" . $row["nombre"] . "</td>
+                <td>" . $row["precio_costo"] . "</td>
+                <td>" . $row["precio_venta"] . "</td>
+                <td>" . $row["subcategoria_nombre"] . "</td>
+                <td>" . $row["existencia"] . "</td>
+                <td>" . $row["unidad_nombre"] . "</td>
+                <td>" . $row["vendedor_nombre"] . "</td>
+                <td>" . $row["fecha_de_ultima_venta"] . "</td>
               </tr>";
     }
 
     echo "</table>";
 } else {
-    echo "<div class='no-data'>No existen estudiantes.</div>";
+    echo "<div class='no-data'>No existen productos.</div>";
 }
 
 $conexion->close();

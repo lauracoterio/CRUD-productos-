@@ -1,18 +1,23 @@
 <?php
 
-include 'conexion.php';
+include 'conexion_P.php';
 
 if (isset($_POST['actualizar'])) { // Si se encuentra el método POST, capturar las variables
 
-    $identificacion = mysqli_real_escape_string($conexion, $_POST['identificacion']);
-    $nombres = mysqli_real_escape_string($conexion, $_POST['nombres']);
-    $apellidos = mysqli_real_escape_string($conexion, $_POST['apellidos']);
-    $semestre = mysqli_real_escape_string($conexion, $_POST['semestre']);
+        $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
+        $precio_costo = mysqli_real_escape_string($conexion, $_POST['precio_costo']);
+        $precio_venta = mysqli_real_escape_string($conexion, $_POST['precio_venta']);
+        $id_sub_categoria = mysqli_real_escape_string($conexion, $_POST['id_sub_categoria']);
+        $existencia = mysqli_real_escape_string($conexion, $_POST['existencia']);
+        $id_unidad_de_medida = mysqli_real_escape_string($conexion, $_POST['id_unidad_de_medida']);
+        $identificacion_vendedor = mysqli_real_escape_string($conexion, $_POST['identificacion_vendedor']);
+        $fecha_de_ultima_venta = mysqli_real_escape_string($conexion, $_POST['fecha_de_ultima_venta']);
 
     // Consulta de actualización
-    $sql = "UPDATE tbl_estudiantes_e
-            SET nombres = '$nombres', apellidos = '$apellidos', semestre = '$semestre' 
-            WHERE tbl_estudiantes_e.identificacion = '$identificacion'";
+    $sql = "UPDATE tbl_productos
+            SET nombres = '$nombre', precio_costo = '$precio_costo', precio_venta = '$precio_venta',id_subcategoria = '$id_subcategoria', existencia = '$existencia', id_unidad_de_medida = '$id_unidad_de_medida',
+            identificacion_vendedor = '$identificacion_vendedor', fecha_de_ultima_venta = '$fecha_de_ultima_venta'
+            WHERE tbl_producto.codigo_producto = '$codigo_producto'";
 
     // Ejecutar la consulta y verificar si fue exitosa
     if ($conexion->query($sql) === TRUE) {
@@ -22,19 +27,19 @@ if (isset($_POST['actualizar'])) { // Si se encuentra el método POST, capturar 
     }
 }
 
-if (isset($_GET['identificacion'])) {
+if (isset($_GET['codigo_producto'])) {
 
-    $identificacion = $_GET['identificacion'];
+    $codigo_producto = $_GET['codigo_producto'];
 
     // Consulta para obtener el estudiante
-    $sql = "SELECT * FROM tbl_estudiantes_e WHERE identificacion = '$identificacion'";
+    $sql = "SELECT * FROM tbl_productos WHERE codigo_producto = '$codigo_producto'";
     $resultado = $conexion->query($sql);
 
     // Verificar si se encontró el estudiante
     if ($resultado->num_rows > 0) {
         $fila = $resultado->fetch_assoc();
     } else {
-        echo "Estudiante no encontrado";
+        echo "Producto no encontrado";
         exit; // Detener la ejecución si no se encuentra
     }
 }
